@@ -1,16 +1,16 @@
 # IronPulse — Gym Management Dashboard
 
-IronPulse is a gym management dashboard built to help gym owners and staff manage daily operations in one place. It brings together the core tools needed to run a gym efficiently, including member administration, payments, class scheduling, and marketing insights.
+IronPulse is a gym management dashboard built for businesses that want one clear place to run operations, track performance, and stay organized. It helps gym owners and staff manage members, payments, class schedules, and marketing without bouncing between disconnected tools.
 
-The dashboard was built to reduce the need to juggle multiple systems and spreadsheets. Its goal is to provide a central workspace where teams can quickly view performance, handle operational tasks, and make better business decisions using organized, easy-to-read data.
+This product was built for gyms that need a better way to work. Instead of relying on spreadsheets, manual follow-ups, and multiple software systems, IronPulse brings the most important day-to-day tasks into a single dashboard. The result is faster decision-making, less administrative work, and a clearer view of how the business is performing.
 
 ## Features
 
-- **Overview** — Key metrics, revenue trends, attendance, and quick-glance widgets
-- **Admin** — Member management, staff roster, and operational task tracking
-- **Payments** — Transaction history, revenue breakdown, and billing overview
-- **Schedule** — Weekly class calendar with capacity tracking and room assignments
-- **Marketing** — Campaign management with open/click rate analytics
+- **Overview** — See the most important numbers at a glance, including revenue, attendance, and trends
+- **Admin** — Manage members, staff, and internal tasks in one place
+- **Payments** — Review transactions, billing activity, and revenue breakdowns
+- **Schedule** — Organize classes, track capacity, and assign rooms
+- **Marketing** — Monitor campaigns and see what is driving engagement
 
 ## Tech Stack
 
