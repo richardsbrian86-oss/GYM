@@ -1,6 +1,8 @@
 # IronPulse — Gym Management Dashboard
 
-A one-stop shop dashboard for gyms to handle admin tasks, payments, class schedules, and marketing.
+IronPulse is a gym management dashboard built to help gym owners and staff manage daily operations in one place. It brings together the core tools needed to run a gym efficiently, including member administration, payments, class scheduling, and marketing insights.
+
+The dashboard was built to reduce the need to juggle multiple systems and spreadsheets. Its goal is to provide a central workspace where teams can quickly view performance, handle operational tasks, and make better business decisions using organized, easy-to-read data.
 
 ## Features
 
