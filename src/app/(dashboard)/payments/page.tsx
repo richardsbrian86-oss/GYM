@@ -4,11 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DollarSign, TrendingUp, AlertTriangle, Clock, Download } from "lucide-react";
-import { payments, revenueByMonth } from "@/lib/mock-data";
+import { getPayments, getRevenueByMonth } from "@/lib/queries";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { BarChart } from "@/components/charts/bar-chart";
 
-export default function PaymentsPage() {
+export default async function PaymentsPage() {
+  const [payments, revenueByMonth] = await Promise.all([getPayments(), getRevenueByMonth()]);
+
   const completed = payments.filter((p) => p.status === "completed");
   const failed = payments.filter((p) => p.status === "failed");
   const pending = payments.filter((p) => p.status === "pending");
@@ -123,8 +125,8 @@ export default function PaymentsPage() {
               <tbody className="divide-y divide-zinc-100">
                 {payments.map((payment) => (
                   <tr key={payment.id} className="hover:bg-zinc-50">
-                    <td className="px-6 py-3 text-sm font-mono text-zinc-500">{payment.id}</td>
-                    <td className="px-6 py-3 text-sm font-medium text-zinc-900">{payment.member}</td>
+                    <td className="px-6 py-3 text-sm font-mono text-zinc-500">{payment.externalId}</td>
+                    <td className="px-6 py-3 text-sm font-medium text-zinc-900">{payment.member.name}</td>
                     <td className="px-6 py-3 text-sm capitalize text-zinc-600">
                       {payment.type.replace("-", " ")}
                     </td>
@@ -132,7 +134,9 @@ export default function PaymentsPage() {
                       {formatCurrency(payment.amount)}
                     </td>
                     <td className="px-6 py-3 text-sm text-zinc-500">{payment.method}</td>
-                    <td className="px-6 py-3 text-sm text-zinc-500">{formatDate(payment.date)}</td>
+                    <td className="px-6 py-3 text-sm text-zinc-500">
+                      {formatDate(payment.date.toISOString())}
+                    </td>
                     <td className="px-6 py-3">
                       <Badge
                         variant={

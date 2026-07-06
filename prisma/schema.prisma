@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model GymSettings {
+  id       Int    @id @default(1)
+  name     String
+  location String
+}
+
+model Member {
+  id         String   @id @default(cuid())
+  name       String
+  email      String   @unique
+  plan       String
+  status     String
+  joinDate   DateTime
+  lastVisit  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  payments   Payment[]
+  enrollments ClassEnrollment[]
+  waitlist   WaitlistEntry[]
+}
+
+model StaffMember {
+  id     String @id @default(cuid())
+  name   String
+  role   String
+  email  String @unique
+  status String
+}
+
+model AdminTask {
+  id       String   @id @default(cuid())
+  title    String
+  assignee String
+  priority String
+  dueDate  DateTime
+  status   String
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  externalId      String   @unique
+  memberId        String
+  member          Member   @relation(fields: [memberId], references: [id])
+  amount          Int
+  type            String
+  status          String
+  date            DateTime
+  method          String
+  stripePaymentId String?
+}
+
+model ClassSession {
+  id         String   @id @default(cuid())
+  name       String
+  instructor String
+  day        String
+  startTime  String
+  endTime    String
+  capacity   Int
+  room       String
+  category   String
+  enrollments ClassEnrollment[]
+  waitlist   WaitlistEntry[]
+}
+
+model ClassEnrollment {
+  id             String       @id @default(cuid())
+  memberId       String
+  member         Member       @relation(fields: [memberId], references: [id])
+  classSessionId String
+  classSession   ClassSession @relation(fields: [classSessionId], references: [id])
+  status         String       @default("confirmed")
+  enrolledAt     DateTime     @default(now())
+
+  @@unique([memberId, classSessionId])
+}
+
+model WaitlistEntry {
+  id             String       @id @default(cuid())
+  memberId       String
+  member         Member       @relation(fields: [memberId], references: [id])
+  classSessionId String
+  classSession   ClassSession @relation(fields: [classSessionId], references: [id])
+  position       Int
+  createdAt      DateTime     @default(now())
+
+  @@unique([memberId, classSessionId])
+}
+
+model Campaign {
+  id        String   @id @default(cuid())
+  name      String
+  type      String
+  status    String
+  audience  Int
+  sent      Int      @default(0)
+  openRate  Float    @default(0)
+  clickRate Float    @default(0)
+  startDate DateTime
+}
+
+model RevenueSnapshot {
+  id      String @id @default(cuid())
+  month   String
+  revenue Int
+}
+
+model AttendanceSnapshot {
+  id    String @id @default(cuid())
+  day   String
+  count Int
+}

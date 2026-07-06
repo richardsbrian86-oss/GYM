@@ -4,10 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Megaphone, Mail, MousePointerClick, Eye, Plus } from "lucide-react";
-import { campaigns } from "@/lib/mock-data";
+import { getCampaigns } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
+import { LaunchCampaignButton } from "@/components/marketing/launch-campaign-button";
 
-export default function MarketingPage() {
+export default async function MarketingPage() {
+  const campaigns = await getCampaigns();
   const active = campaigns.filter((c) => c.status === "active");
   const totalSent = campaigns.reduce((sum, c) => sum + c.sent, 0);
   const avgOpenRate =
@@ -106,15 +108,11 @@ export default function MarketingPage() {
               <CardContent className="flex flex-1 flex-col">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="rounded-lg bg-zinc-50 p-3 text-center">
-                    <p className="text-lg font-bold text-zinc-900">
-                      {campaign.audience.toLocaleString()}
-                    </p>
+                    <p className="text-lg font-bold text-zinc-900">{campaign.audience.toLocaleString()}</p>
                     <p className="text-xs text-zinc-500">Audience</p>
                   </div>
                   <div className="rounded-lg bg-zinc-50 p-3 text-center">
-                    <p className="text-lg font-bold text-zinc-900">
-                      {campaign.sent.toLocaleString()}
-                    </p>
+                    <p className="text-lg font-bold text-zinc-900">{campaign.sent.toLocaleString()}</p>
                     <p className="text-xs text-zinc-500">Sent</p>
                   </div>
                   <div className="rounded-lg bg-zinc-50 p-3 text-center">
@@ -127,16 +125,18 @@ export default function MarketingPage() {
                   </div>
                 </div>
                 <p className="mt-4 text-xs text-zinc-400">
-                  Started {formatDate(campaign.startDate)}
+                  Started {formatDate(campaign.startDate.toISOString())}
                 </p>
                 <div className="mt-auto flex gap-2 pt-4">
                   <Button variant="outline" size="sm" className="flex-1">
                     View Report
                   </Button>
-                  {campaign.status === "draft" && (
-                    <Button size="sm" className="flex-1">
-                      Launch
-                    </Button>
+                  {(campaign.status === "draft" || campaign.status === "active") && (
+                    <LaunchCampaignButton
+                      campaignId={campaign.id}
+                      campaignName={campaign.name}
+                      type={campaign.type}
+                    />
                   )}
                 </div>
               </CardContent>
@@ -149,9 +149,7 @@ export default function MarketingPage() {
                 <Plus className="h-6 w-6 text-orange-600" />
               </div>
               <p className="mt-4 text-sm font-medium text-zinc-900">Create New Campaign</p>
-              <p className="mt-1 text-xs text-zinc-500">
-                Email, SMS, or social media
-              </p>
+              <p className="mt-1 text-xs text-zinc-500">Email, SMS, or social media</p>
               <Button size="sm" className="mt-4">
                 Get Started
               </Button>

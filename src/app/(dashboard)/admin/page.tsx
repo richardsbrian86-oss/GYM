@@ -4,14 +4,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Users, UserCheck, ClipboardList, AlertCircle, Plus } from "lucide-react";
-import { members, staff, adminTasks } from "@/lib/mock-data";
+import { getMembers, getStaff, getAdminTasks } from "@/lib/queries";
 import { formatDate } from "@/lib/utils";
 
-export default function AdminPage() {
+export default async function AdminPage() {
+  const [members, staff, adminTasks] = await Promise.all([
+    getMembers(),
+    getStaff(),
+    getAdminTasks(),
+  ]);
+
   const activeMembers = members.filter((m) => m.status === "active").length;
   const onDutyStaff = staff.filter((s) => s.status === "on-duty").length;
   const pendingTasks = adminTasks.filter((t) => t.status !== "completed").length;
-  const highPriority = adminTasks.filter((t) => t.priority === "high" && t.status !== "completed").length;
+  const highPriority = adminTasks.filter(
+    (t) => t.priority === "high" && t.status !== "completed"
+  ).length;
 
   return (
     <>
@@ -96,7 +104,9 @@ export default function AdminPage() {
                           {member.status}
                         </Badge>
                       </td>
-                      <td className="px-6 py-3 text-sm text-zinc-500">{formatDate(member.lastVisit)}</td>
+                      <td className="px-6 py-3 text-sm text-zinc-500">
+                        {formatDate(member.lastVisit.toISOString())}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -179,7 +189,9 @@ export default function AdminPage() {
                         {task.priority}
                       </Badge>
                     </td>
-                    <td className="px-6 py-3 text-sm text-zinc-500">{formatDate(task.dueDate)}</td>
+                    <td className="px-6 py-3 text-sm text-zinc-500">
+                      {formatDate(task.dueDate.toISOString())}
+                    </td>
                     <td className="px-6 py-3">
                       <Badge
                         variant={
