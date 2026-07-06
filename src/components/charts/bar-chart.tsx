@@ -1,4 +1,3 @@
-import { revenueByMonth, weeklyAttendance } from "@/lib/mock-data";
 import { formatCurrency } from "@/lib/utils";
 
 interface BarChartProps {
@@ -30,23 +29,5 @@ export function BarChart({ data, color = "bg-orange-500", formatValue }: BarChar
         );
       })}
     </div>
-  );
-}
-
-export function RevenueChart() {
-  return (
-    <BarChart
-      data={revenueByMonth.map((m) => ({ label: m.month, value: m.revenue }))}
-      formatValue={formatCurrency}
-    />
-  );
-}
-
-export function AttendanceChart() {
-  return (
-    <BarChart
-      data={weeklyAttendance.map((d) => ({ label: d.day, value: d.count }))}
-      color="bg-emerald-500"
-    />
   );
 }

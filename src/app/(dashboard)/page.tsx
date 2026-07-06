@@ -2,25 +2,32 @@ import { Header } from "@/components/layout/header";
 import { StatCard } from "@/components/ui/stat-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { RevenueChart, AttendanceChart } from "@/components/charts/bar-chart";
-import {
-  Users,
-  DollarSign,
-  Calendar,
-  TrendingUp,
-  ArrowRight,
-} from "lucide-react";
+import { BarChart } from "@/components/charts/bar-chart";
+import { Users, DollarSign, Calendar, TrendingUp, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import {
-  gymInfo,
-  payments,
-  classSessions,
-  adminTasks,
-  campaigns,
-} from "@/lib/mock-data";
+  getGymInfo,
+  getPayments,
+  getClassSessions,
+  getAdminTasks,
+  getCampaigns,
+  getRevenueByMonth,
+  getWeeklyAttendance,
+} from "@/lib/queries";
 import { formatCurrency, formatTime } from "@/lib/utils";
 
-export default function OverviewPage() {
+export default async function OverviewPage() {
+  const [gymInfo, payments, classSessions, adminTasks, campaigns, revenueByMonth, weeklyAttendance] =
+    await Promise.all([
+      getGymInfo(),
+      getPayments(),
+      getClassSessions(),
+      getAdminTasks(),
+      getCampaigns(),
+      getRevenueByMonth(),
+      getWeeklyAttendance(),
+    ]);
+
   const todayClasses = classSessions.filter((c) => c.day === "Monday");
   const pendingTasks = adminTasks.filter((t) => t.status !== "completed");
   const recentPayments = payments.slice(0, 5);
@@ -59,10 +66,10 @@ export default function OverviewPage() {
             iconColor="bg-orange-100 text-orange-600"
           />
           <StatCard
-            title="Check-ins Today"
-            value="187"
-            change="+23 vs yesterday"
-            changeType="positive"
+            title="Staff On Duty"
+            value={String(gymInfo.staffOnDuty)}
+            change="Across all shifts"
+            changeType="neutral"
             icon={TrendingUp}
             iconColor="bg-purple-100 text-purple-600"
           />
@@ -74,7 +81,10 @@ export default function OverviewPage() {
               <CardTitle>Revenue Trend</CardTitle>
             </CardHeader>
             <CardContent>
-              <RevenueChart />
+              <BarChart
+                data={revenueByMonth.map((m) => ({ label: m.month, value: m.revenue }))}
+                formatValue={formatCurrency}
+              />
             </CardContent>
           </Card>
           <Card>
@@ -82,7 +92,10 @@ export default function OverviewPage() {
               <CardTitle>Weekly Attendance</CardTitle>
             </CardHeader>
             <CardContent>
-              <AttendanceChart />
+              <BarChart
+                data={weeklyAttendance.map((d) => ({ label: d.day, value: d.count }))}
+                color="bg-emerald-500"
+              />
             </CardContent>
           </Card>
         </div>
@@ -153,7 +166,7 @@ export default function OverviewPage() {
               {recentPayments.map((payment) => (
                 <div key={payment.id} className="flex items-center justify-between rounded-lg border border-zinc-100 p-3">
                   <div>
-                    <p className="text-sm font-medium text-zinc-900">{payment.member}</p>
+                    <p className="text-sm font-medium text-zinc-900">{payment.member.name}</p>
                     <p className="text-xs text-zinc-500">{payment.type}</p>
                   </div>
                   <div className="text-right">

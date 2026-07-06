@@ -4,15 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, MapPin, Plus } from "lucide-react";
-import { classSessions, daysOfWeek } from "@/lib/mock-data";
+import { getClassSessions, getMembers, daysOfWeek } from "@/lib/queries";
 import { formatTime } from "@/lib/utils";
+import { EnrollButton } from "@/components/schedule/enroll-button";
 
-export default function SchedulePage() {
+export default async function SchedulePage() {
+  const [classSessions, members] = await Promise.all([getClassSessions(), getMembers()]);
+  const demoMemberId = members[0]?.id ?? "";
+
   const totalEnrolled = classSessions.reduce((sum, c) => sum + c.enrolled, 0);
   const totalCapacity = classSessions.reduce((sum, c) => sum + c.capacity, 0);
   const fullClasses = classSessions.filter((c) => c.enrolled >= c.capacity).length;
-  const avgFill = Math.round((totalEnrolled / totalCapacity) * 100);
-
+  const avgFill = totalCapacity > 0 ? Math.round((totalEnrolled / totalCapacity) * 100) : 0;
+  const rooms = [...new Set(classSessions.map((c) => c.room))];
   const categories = [...new Set(classSessions.map((c) => c.category))];
 
   return (
@@ -50,8 +54,8 @@ export default function SchedulePage() {
           />
           <StatCard
             title="Rooms in Use"
-            value="4"
-            change="Studio A, B, Cycle, Outdoor"
+            value={String(rooms.length)}
+            change={rooms.join(", ")}
             changeType="neutral"
             icon={MapPin}
             iconColor="bg-emerald-100 text-emerald-600"
@@ -83,7 +87,8 @@ export default function SchedulePage() {
                 <CardContent>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {dayClasses.map((cls) => {
-                      const fillPercent = Math.round((cls.enrolled / cls.capacity) * 100);
+                      const fillPercent =
+                        cls.capacity > 0 ? Math.round((cls.enrolled / cls.capacity) * 100) : 0;
                       const isFull = cls.enrolled >= cls.capacity;
 
                       return (
@@ -120,6 +125,14 @@ export default function SchedulePage() {
                               />
                             </div>
                           </div>
+                          {demoMemberId && (
+                            <EnrollButton
+                              classId={cls.id}
+                              memberId={demoMemberId}
+                              isFull={isFull}
+                              waitlistCount={cls.waitlistCount}
+                            />
+                          )}
                         </div>
                       );
                     })}
