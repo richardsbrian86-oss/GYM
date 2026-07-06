@@ -1,12 +1,16 @@
-A one-stop shop dashboard for gyms to handle admin tasks, payments, class schedules, and marketing.
+# IronPulse — Gym Management Dashboard
+
+IronPulse is a gym management dashboard built for businesses that want one clear place to run operations, track performance, and stay organized. It helps gym owners and staff manage members, payments, class schedules, and marketing without bouncing between disconnected tools.
+
+This product was built for gyms that need a better way to work. Instead of relying on spreadsheets, manual follow-ups, and multiple software systems, IronPulse brings the most important day-to-day tasks into a single dashboard. The result is faster decision-making, less administrative work, and a clearer view of how the business is performing.
 
 ## Features
 
-- **Overview** — Key metrics, revenue trends, attendance, and quick-glance widgets
-- **Admin** — Member management, staff roster, and operational task tracking
-- **Payments** — Transaction history, revenue breakdown, and billing overview
-- **Schedule** — Weekly class calendar with capacity tracking, enrollment, and waitlists
-- **Marketing** — Campaign management with email/SMS sending and analytics
+- **Overview** — See the most important numbers at a glance, including revenue, attendance, and trends
+- **Admin** — Manage members, staff, and internal tasks in one place
+- **Payments** — Review transactions, billing activity, and revenue breakdowns
+- **Schedule** — Organize classes, track capacity, and assign rooms
+- **Marketing** — Monitor campaigns and see what is driving engagement
 
 ## Tech Stack
 
